@@ -1,7 +1,7 @@
 #include "DNA.h"
 
 
-Files::Files(){
+Files::Files(){//sooooo many member variables
  sum = 0;
  mean = 0;
  variance = 0;
@@ -37,8 +37,7 @@ Files::Files(){
 srand (time(NULL));//generates a random seed for rand()
 }
 
-Files::~Files(){
-  cout<< "deconstructor for Files"<<endl;
+Files::~Files(){//deconstructor for Files
 }
 
 string Files::fileProcessing(string text){
@@ -48,7 +47,7 @@ string Files::fileProcessing(string text){
   ifstream myFile;
   myFile.open(text);
 
-  while(getline(myFile,curLine)){
+  while(getline(myFile,curLine)){//this loop counts the total number of characters and the number of each nucleotide
     if(!validLine(curLine)){
       continue;
     }
@@ -68,15 +67,14 @@ string Files::fileProcessing(string text){
           ctot++;
           break;
         default:
-          cout<<"ERROR: incorrect value in switch statement-"<<curLine[i]<<endl;
+          cout<<"ERROR: incorrect value in switch statement-"<<curLine[i]<<endl;//should never reach this line
       }
-
     }
     numLines++;
   }
   myFile.close();
 
-  mean = ((float)sum)/numLines;
+  mean = ((float)sum)/numLines;//These next lines calculate the statistics for the DNA strings
   calcVariance(text);
   std = sqrt(variance);
   bigrams(text);
@@ -105,7 +103,7 @@ string Files::fileProcessing(string text){
   return r;
 }
 
-bool Files::validLine(string line){
+bool Files::validLine(string line){//takes a string and returns whether it is a valid DNA String
   string valid="atcgATCG ";
   for(int i = 0;i<line.size()-1;++i){
     if(valid.find(line[i]) == string::npos){
@@ -128,7 +126,7 @@ void Files::calcVariance(string text){//only works if mean has been calculated
   variance = variance/numLines;
 }
 
-void Files::bigrams(string text){
+void Files::bigrams(string text){//counts the number of each bigram in the text
   ifstream myFile;
   myFile.open(text);
   string line="";
@@ -234,7 +232,7 @@ void Files::bigrams(string text){
   }
 }
 
-string Files::thousandLines(){
+string Files::thousandLines(){//creates 1000 lines of DNA strings with the similar statistic
   string lines = "";
   for(int i = 0;i<1000;++i){
     int D = calcD();
@@ -243,21 +241,21 @@ string Files::thousandLines(){
   return lines;
 }
 
-int Files::calcD(){
+int Files::calcD(){//calculates the D value for a gaussian distribution
   float C = 0;
   float a = 0;
   float b = 0;
 
-  a = (float)rand()/(float)(RAND_MAX);
+  a = (float)rand()/(float)(RAND_MAX);//this took quite a bit of reasearch, mostly from stack Overflow
   b = (float)rand()/(float)(RAND_MAX);
 
-  C = sqrt((-2)*log(a))*cos(M_PI*2*b);
+  C = sqrt((-2)*log(a))*cos(M_PI*2*b);//had to look up these functions, easier than I thought it would be
   int D = round(std*C+mean);
 
   return D;
 }
 
-string Files::makeLine(int D){
+string Files::makeLine(int D){//creates the individual lines for thousandLines()
   string line = "";
 
   for(int i = 0; i<=D; ++i){
@@ -278,7 +276,7 @@ string Files::makeLine(int D){
       line+='G';
       continue;
     }
-    cout<<"ERROR:string File::makeLine(int D) has probibility values that add to >1"<<endl;
+    cout<<"ERROR:string File::makeLine(int D) has probibility values that add to >1"<<endl;//tells me if I messed up on the probability
   }
   return line+"\n";
 }
